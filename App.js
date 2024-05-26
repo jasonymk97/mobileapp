@@ -1,20 +1,69 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useCallback, useEffect, useState } from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { ThemeProvider } from "./context/theme";
+import * as SplashScreen from 'expo-splash-screen';
+import { createStackNavigator } from '@react-navigation/stack';
+import MainTabStack from './navigation/MainTabStack';
+import AuthStack from './navigation/AuthStack';
+import Toast from 'react-native-toast-message';
+
+const Stack = createStackNavigator();
+
+// Keep the splash screen visible while we fetch resources
+SplashScreen.preventAutoHideAsync();
 
 export default function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(true); // State to track login status
+  const [appIsReady, setAppIsReady] = useState(false);
+
+  useEffect(() => {
+    async function prepare() {
+      try {
+        await new Promise(resolve => setTimeout(resolve, 1000));
+      } catch (e) {
+        console.warn(e);
+      } finally {
+        // Tell the application to render
+        setAppIsReady(true);
+      }
+    }
+
+    prepare();
+  }, []);
+
+  const onReadyApp = useCallback(async () => {
+    if (appIsReady) {
+      await SplashScreen.hideAsync();
+    }
+  }, [appIsReady]);
+
+  if (!appIsReady) {
+    return null; // Return null or a loading spinner while the app is not ready
+  }
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer onReady={onReadyApp}>
+      <ThemeProvider>
+      <Stack.Navigator>
+        {isLoggedIn ? (
+          <Stack.Screen
+            name="Main"
+            component={MainTabStack}
+            options={{ headerShown: false }}
+          />
+        ) : (
+          <>
+            <Stack.Screen
+              name="Auth"
+              component={AuthStack}
+              options={{ headerShown: false }}
+            />
+          </>
+        )}
+      </Stack.Navigator>
+      </ThemeProvider>
+      {/* Global Toast */}
+      <Toast /> 
+    </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
