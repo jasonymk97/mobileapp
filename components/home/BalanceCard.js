@@ -15,7 +15,7 @@ const AnimatedCard = (props) => {
     });
     return totalExpense;
   }
-
+  
   const totalIncome = () => {
     let totalIncome = 0;
     transactions.forEach(transaction => {
@@ -26,10 +26,10 @@ const AnimatedCard = (props) => {
     });
     return totalIncome;
   }
-
-  let income = totalIncome();
-  let expense = totalExpense();
-  let balance = income - expense || 0;
+  
+  let income = totalIncome().toFixed(2);
+  let expense = totalExpense().toFixed(2);
+  let balance = (income - expense).toFixed(2) || 0;
 
   const [isHidden, setIsHidden] = useState(true);
 

@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert} from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import AppButton from './AppButton';
 import transactionService from '../services/transactionService';
 import useAlert from '../hooks/useAlert';
+import { categorySelectItems, transactionTypeSelectItems } from '../constants/globalConstants';
 
-const TransactionForm = ({setModalVisible, setRefreshTransactions}) => {
+const TransactionForm = ({ setModalVisible, setRefreshTransactions }) => {
     const [date, setDate] = useState(new Date());
     const [datePickerVisible, setDatePickerVisible] = useState(false);
-    const { show } = useAlert(); // Use useAlert hook
+    const { show } = useAlert(); 
     const [amount, setAmount] = useState('');
     const [description, setDescription] = useState('');
     const [type, setType] = useState('expense'); // Default type is expense
@@ -30,35 +31,35 @@ const TransactionForm = ({setModalVisible, setRefreshTransactions}) => {
     };
 
     const handleAddTransaction = async () => {
-        console.log('amount:', amount);
-        console.log('type of amount:', typeof amount);
-        // Validate form fields
-        if (!amount || isNaN(parseFloat(amount))) {
-            Alert.alert('Error', 'Please enter a valid amount.');
-            return;
-        }
-
-        if (!description.trim()) {
-            Alert.alert('Error', 'Please enter a description.');
-            return;
-        }
         try {
+            // Validate form fields
+            if (!amount || isNaN(parseFloat(amount))) {
+                Alert.alert('Error', 'Please enter a valid amount.');
+                return;
+            }
+
+            if (!description.trim()) {
+                Alert.alert('Error', 'Please enter a description.');
+                return;
+            }
+
             let requestObj = {
                 date: date.getTime(), // convert to integer timestamp
-                amount: parseFloat(amount), // convert to float
+                amount: parseFloat(amount).toFixed(2), // convert to float
                 description: description,
                 type: type,
                 category_id: category,
-            } 
-            console.log("🚀 ~ handleAddTransaction ~ requestObj:", requestObj)
+            }
+
             setIsLoading(true);
             const response = await transactionService.createTransaction(requestObj);
-            console.log('Response from backend:', response);
+
             if (response.isError) {
                 show('Error', 'Failed to add transaction. Please try again.', 'error');
                 setIsLoading(false);
                 return;
             }
+
             show('Success', 'Transaction added successfully.', 'success');
             setIsLoading(false);
             setRefreshTransactions(true) // Refresh transactions
@@ -78,7 +79,7 @@ const TransactionForm = ({setModalVisible, setRefreshTransactions}) => {
 
     return (
         <View style={styles.container}>
-            <Text style={{ marginBottom: 5, fontWeight: 'bold'}}>Date:</Text>
+            <Text style={{ marginBottom: 5, fontWeight: 'bold' }}>Date:</Text>
             <TouchableOpacity style={{ marginBottom: 10 }} onPress={() => showDatePickerFunction()}>
                 <Text style={styles.dateText}>{formatDate(date)}</Text>
             </TouchableOpacity>
@@ -89,7 +90,7 @@ const TransactionForm = ({setModalVisible, setRefreshTransactions}) => {
                 onConfirm={handleConfirm}
                 onCancel={hideDatePicker}
             />
-            <Text style={{ marginBottom: 5, fontWeight: 'bold'}} >Amount:</Text>
+            <Text style={{ marginBottom: 5, fontWeight: 'bold' }} >Amount:</Text>
             <TextInput
                 style={styles.input}
                 value={amount}
@@ -99,7 +100,7 @@ const TransactionForm = ({setModalVisible, setRefreshTransactions}) => {
             />
 
 
-            <Text style={{ marginBottom: 5, fontWeight: 'bold'}} >Description:</Text>
+            <Text style={{ marginBottom: 5, fontWeight: 'bold' }} >Description:</Text>
             <TextInput
                 style={styles.descriptionInput}
                 value={description}
@@ -109,38 +110,24 @@ const TransactionForm = ({setModalVisible, setRefreshTransactions}) => {
                 numberOfLines={4}
             />
 
-            <Text style={{ marginBottom: 5, fontWeight: 'bold'}} >Type:</Text>
+            <Text style={{ marginBottom: 5, fontWeight: 'bold' }} >Type:</Text>
             <View style={styles.rnPicker}>
                 <RNPickerSelect
                     value={type}
                     onValueChange={(itemValue) => setType(itemValue)}
-                    items={[
-                        { label: 'Expense', value: 'expense' },
-                        { label: 'Income', value: 'income' },
-                    ]}>
+                    items={transactionTypeSelectItems}>
                 </RNPickerSelect>
             </View>
-            
-            <Text style={{ marginBottom: 5, fontWeight: 'bold'}} >Category:</Text>
+
+            <Text style={{ marginBottom: 5, fontWeight: 'bold' }} >Category:</Text>
             <View style={styles.rnPicker}>
                 <RNPickerSelect
                     value={category}
                     onValueChange={(itemValue) => setCategory(itemValue)}
-                    items={[
-                        { label: 'Housing', value: 1 },
-                        { label: 'Transportation', value: 2 },
-                        { label: 'Food', value: 3 },
-                        { label: 'Utilities', value: 4 },
-                        { label: 'Insurance', value: 5 },
-                        { label: 'Medical & Healthcare', value: 6 },
-                        { label: 'Savings', value: 7 },
-                        { label: 'Personal Spending', value: 8 },
-                        { label: 'Recreation & Entertainment', value: 9 },
-                        { label: 'Miscellaneous', value: 10 },
-                    ]}>
+                    items={categorySelectItems}>
                 </RNPickerSelect>
             </View>
-            <View style={{marginBottom: 10}}/>
+            <View style={{ marginBottom: 10 }} />
             <AppButton title="Add Transaction" onPress={handleAddTransaction} isLoading={isLoading} />
         </View>
     );

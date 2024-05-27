@@ -8,16 +8,17 @@ import useAlert from '../hooks/useAlert';
 import Layout from '../components/Layout';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import { categorySelectItems, transactionTypeSelectItems } from '../constants/globalConstants';
 
 const TransactionInfoScreen = ({ route }) => {
     const { transaction } = route.params;
     const {
         id,
-        date: transactionDate, 
-        amount: transactionAmount, 
+        date: transactionDate,
+        amount: transactionAmount,
         description: transactionDescription,
         type: transactionType,
-        category_id: transactionCategory, 
+        category_id: transactionCategory,
     } = transaction;
 
     const [date, setDate] = useState(new Date(transactionDate)); // convert integer to date object
@@ -44,17 +45,18 @@ const TransactionInfoScreen = ({ route }) => {
     };
 
     const handleUpdateTransaction = async () => {
-        // Validate form fields
-        if (!amount || isNaN(parseFloat(amount))) {
-            Alert.alert('Error', 'Please enter a valid amount.');
-            return;
-        }
-
-        if (!description.trim()) {
-            Alert.alert('Error', 'Please enter a description.');
-            return;
-        }
         try {
+            // Validate form fields
+            if (!amount || isNaN(parseFloat(amount))) {
+                Alert.alert('Error', 'Please enter a valid amount.');
+                return;
+            }
+
+            if (!description.trim()) {
+                Alert.alert('Error', 'Please enter a description.');
+                return;
+            }
+
             let requestObj = {
                 id: id,
                 date: date.getTime(), // convert to integer timestamp
@@ -111,13 +113,13 @@ const TransactionInfoScreen = ({ route }) => {
                 show('Error', 'Failed to deleting transaction. Please try again.', 'error');
                 return;
             }
-
+            
+            show('Success', 'Transaction delete successfully.', 'success');
+            // delete transaction and navigate to home screen
+            navigation.navigate('Home');
         } catch (error) {
             console.error('Error deleting transaction:', error);
         }
-        show('Success', 'Transaction delete successfully.', 'success');
-        // delete transaction and navigate to home screen
-        navigation.navigate('Home');
     }
     const formatDate = (date) => {
         const year = date.getFullYear();
@@ -154,7 +156,6 @@ const TransactionInfoScreen = ({ route }) => {
                     placeholder="Enter Amount"
                 />
 
-
                 <Text style={{ marginBottom: 5, fontWeight: 'bold' }} >Description:</Text>
                 <TextInput
                     style={styles.descriptionInput}
@@ -170,10 +171,7 @@ const TransactionInfoScreen = ({ route }) => {
                     <RNPickerSelect
                         value={type}
                         onValueChange={(itemValue) => setType(itemValue)}
-                        items={[
-                            { label: 'Expense', value: 'expense' },
-                            { label: 'Income', value: 'income' },
-                        ]}>
+                        items={transactionTypeSelectItems}>
                     </RNPickerSelect>
                 </View>
 
@@ -182,18 +180,7 @@ const TransactionInfoScreen = ({ route }) => {
                     <RNPickerSelect
                         value={category}
                         onValueChange={(itemValue) => setCategory(itemValue)}
-                        items={[
-                            { label: 'Housing', value: 1 },
-                            { label: 'Utilities', value: 2 },
-                            { label: 'Food', value: 3 },
-                            { label: 'Transportation', value: 4 },
-                            { label: 'Insurance', value: 5 },
-                            { label: 'Medical & Healthcare', value: 6 },
-                            { label: 'Savings', value: 7 },
-                            { label: 'Personal Spending', value: 8 },
-                            { label: 'Recreation & Entertainment', value: 9 },
-                            { label: 'Miscellaneous', value: 10 },
-                        ]}>
+                        items={categorySelectItems}>
                     </RNPickerSelect>
                 </View>
                 <View style={{ marginBottom: 10 }} />
