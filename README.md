@@ -8,3 +8,11 @@ https://jsonviewer.stack.hu/
 https://mui.com/material-ui/material-icons/?query=transaction
 https://www.rapidtables.com/web/color/RGB_Color.html
 https://icons.expo.fyi/Index
+
+# How to generate licenses.json
+
+Step 1:
+npm install -g npm-license-crawler
+
+Step 2:
+npm-license-crawler -dependencies -json licenses.json
