@@ -1,25 +1,24 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
-import { View, Button, FlatList, StyleSheet } from 'react-native';
+import { View, FlatList, StyleSheet, Text} from 'react-native';
 import { FAB } from 'react-native-paper';
 import Layout from '../components/Layout';
 import TransactionItem from '../components/TransactionItem';
 import transactionService from '../services/transactionService';
 import BottomPopupModal from '../components/BottomPopupModal';
 import TransactionForm from '../components/TransactionForm';
+import BalanceCard from '../components/home/BalanceCard';
 
-
-export default function HomeScreen({ navigation }) {
+export default function HomeScreen() {
   const [transactions, setTransactions] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [refreshTransactions, setRefreshTransactions] = useState(false);
-
+  
   const handleClose = () => {
     setModalVisible(false);
   };
 
   const handleConfirm = () => {
-    // Handle confirm action
     setModalVisible(false);
   };
 
@@ -60,10 +59,10 @@ export default function HomeScreen({ navigation }) {
   return (
     <>
       <Layout>
-        {/* <View style={styles.container}> */}
-        <View>
-
+        <View style={{opacity: modalVisible? 0.5 : undefined}}>
+        <BalanceCard transactions={transactions}/>
         </View>
+        <Text style={styles.header}>Transactions</Text>
         <FlatList
           data={transactions}
           renderItem={({ item }) => <TransactionItem transaction={item} />}
@@ -72,7 +71,6 @@ export default function HomeScreen({ navigation }) {
         <FAB
           icon="plus"
           style={styles.fab}
-          // onPress={() => console.log('FAB pressed 4444')}
           onPress={() => setModalVisible(true)}
         />
         <BottomPopupModal
@@ -82,7 +80,6 @@ export default function HomeScreen({ navigation }) {
           <TransactionForm setModalVisible={setModalVisible} setRefreshTransactions={setRefreshTransactions}/>
         </BottomPopupModal>
       </Layout>
-      {/* </View> */}
     </>
   );
 }
@@ -90,12 +87,12 @@ export default function HomeScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // padding: 16,
-    // position: 'relative', // Ensure FAB is positioned relative to this container
   },
   header: {
+    fontWeight: '500',
     fontSize: 24,
     marginBottom: 16,
+    color: 'rgb(223, 107, 146)'
   },
   input: {
     width: '100%',
@@ -109,6 +106,5 @@ const styles = StyleSheet.create({
     margin: 16,
     right: 0,
     bottom: 0,
-    // zIndex: 1, // Ensure FAB appears above FlatList items
   },
 });

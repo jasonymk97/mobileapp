@@ -5,9 +5,9 @@ import { View, StyleSheet } from "react-native";
 
 export default function Layout({ children }) {
   return (
-    <SafeAreaView style={styles.safeArea}>
+    //  Fix extra space for StatusBar in the Top side
+    <SafeAreaView style={styles.safeArea} edges={['bottom', 'left', 'right']}>
       <StatusBar style="auto" />
-
       <View style={styles.container}>{children}</View>
     </SafeAreaView>
   );
@@ -16,15 +16,10 @@ export default function Layout({ children }) {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    // backgroundColor: "#fff",
     backgroundColor: "#d5dde8",
   },
   container: {
     flex: 1,
-    // backgroundColor: "#fff",
-    // width: "90%",
-    // padding: 20,
-    // alignSelf: "center",
     marginHorizontal: 20,
   },
 });

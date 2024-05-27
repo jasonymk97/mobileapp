@@ -6,6 +6,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import MainTabStack from './navigation/MainTabStack';
 import AuthStack from './navigation/AuthStack';
 import Toast from 'react-native-toast-message';
+import TransactionInfoScreen from './screens/TransactionInfoScreen';
 
 const Stack = createStackNavigator();
 
@@ -44,26 +45,31 @@ export default function App() {
   return (
     <NavigationContainer onReady={onReadyApp}>
       <ThemeProvider>
-      <Stack.Navigator>
-        {isLoggedIn ? (
-          <Stack.Screen
-            name="Main"
-            component={MainTabStack}
-            options={{ headerShown: false }}
-          />
-        ) : (
-          <>
-            <Stack.Screen
-              name="Auth"
-              component={AuthStack}
-              options={{ headerShown: false }}
-            />
-          </>
-        )}
-      </Stack.Navigator>
+        <Stack.Navigator>
+          {isLoggedIn ? (
+            <>
+              <Stack.Screen
+                name="Main"
+                component={MainTabStack}
+                options={{ headerShown: false }} />
+              <Stack.Screen
+                name="TransactionInfoScreen"
+                component={TransactionInfoScreen}
+                options={{ title: 'Transaction Info' }} />
+            </>
+          ) : (
+            <>
+              <Stack.Screen
+                name="Auth"
+                component={AuthStack}
+                options={{ headerShown: false }}
+              />
+            </>
+          )}
+        </Stack.Navigator>
       </ThemeProvider>
       {/* Global Toast */}
-      <Toast /> 
+      <Toast />
     </NavigationContainer>
   );
 }

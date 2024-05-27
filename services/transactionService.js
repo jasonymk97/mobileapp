@@ -8,8 +8,8 @@ export const getTransactions = async () => {
 export const deleteTransaction = async (id) => {
   return request('delete', `/transactions/${id}`);
 };
-export const updateTransaction = async (id, amount, description) => {
-  return request('put', `/transactions/${id}`, { amount, description });
+export const updateTransaction = async ({id, date, amount, description, type, category_id}) => {
+  return request('put', `/transactions/${id}`, {date, amount, description, type, category_id });
 };
 
 export default {
