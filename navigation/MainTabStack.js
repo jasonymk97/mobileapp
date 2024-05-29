@@ -5,12 +5,25 @@ import HomeScreen from '../screens/HomeScreen';
 import AboutScreen from '../screens/AboutScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import AnalyticsScreen from '../screens/AnalyticsScreen';
-
+import { useTheme } from '../context/theme';
+import CommonStyles from '../style/CommonStyles';
 const Tab = createBottomTabNavigator();
 
 export default function MainTabStack() {
+    const { theme } = useTheme();
     return (
-        <Tab.Navigator>
+        <Tab.Navigator
+            screenOptions={{
+                headerStyle: {
+                    backgroundColor: CommonStyles.colorStyles[theme.color],
+                },
+                headerTitleStyle: {
+                    fontWeight: 'bold',
+                    fontSize: CommonStyles.textSizeStyles[theme.textSize].fontSize,
+                },
+                tabBarActiveTintColor: CommonStyles.colorStyles[theme.color], // Active tab color
+            }}
+        >
             <Tab.Screen
                 name="Home"
                 component={HomeScreen}

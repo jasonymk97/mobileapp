@@ -46,7 +46,6 @@ export default function App() {
     <NavigationContainer onReady={onReadyApp}>
       <ThemeProvider>
         <Stack.Navigator>
-          {isLoggedIn ? (
             <>
               <Stack.Screen
                 name="Main"
@@ -57,7 +56,6 @@ export default function App() {
                 component={TransactionInfoScreen}
                 options={{ title: 'Transaction Info' }} />
             </>
-          ) : (
             <>
               <Stack.Screen
                 name="Auth"
@@ -65,7 +63,6 @@ export default function App() {
                 options={{ headerShown: false }}
               />
             </>
-          )}
         </Stack.Navigator>
       </ThemeProvider>
       {/* Global Toast */}

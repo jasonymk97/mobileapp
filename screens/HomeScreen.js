@@ -8,8 +8,10 @@ import transactionService from '../services/transactionService';
 import BottomPopupModal from '../components/BottomPopupModal';
 import TransactionForm from '../components/TransactionForm';
 import BalanceCard from '../components/home/BalanceCard';
+import { useTheme } from "../context/theme";
 
 export default function HomeScreen() {
+  const { theme } = useTheme();
   const [transactions, setTransactions] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [refreshTransactions, setRefreshTransactions] = useState(false);
@@ -70,7 +72,7 @@ export default function HomeScreen() {
         {/* NOTE: FAB must behind the FlatList, as the FlatList will block the FAB */}
         <FAB
           icon="plus"
-          style={styles.fab}
+          style={[styles.fab, theme.isLeft ? {left: 0} : {right: 0}]}
           onPress={() => setModalVisible(true)}
         />
         <BottomPopupModal
@@ -104,7 +106,6 @@ const styles = StyleSheet.create({
   fab: {
     position: 'absolute',
     margin: 16,
-    right: 0,
     bottom: 0,
   },
 });

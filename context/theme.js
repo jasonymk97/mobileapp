@@ -1,28 +1,44 @@
-import { createContext, useState, useContext, useEffect} from "react";
+import { createContext, useState, useContext, useEffect } from "react";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ThemeContext = createContext();
 
+// Custom hook to use theme
 export const useTheme = () => useContext(ThemeContext);
 
 export function ThemeProvider({ children }) {
-    const [isLargeText, setIsLargeText] = useState(false);
+    const [theme, setTheme] = useState({
+        textSize: 'medium',
+        color: 'black',
+        isLeft: false,
+    });
 
     useEffect(() => {
-        const getTheme = async () => {
+        const loadTheme = async () => {
             try {
-                const storedTheme = await AsyncStorage.getItem("isLargeText");
-                const parsedTheme = storedTheme ? JSON.parse(storedTheme) : false;
-                setIsLargeText(parsedTheme);
-            } catch (error) {
+                const savedTheme = await AsyncStorage.getItem('theme');
+                if (savedTheme) {
+                    setTheme(JSON.parse(savedTheme));
+                }
+            }
+            catch (error) {
                 console.error("Error loading theme:", error);
             }
-        };
-        getTheme();
+        }
+        loadTheme();
     }, []);
 
+    const saveTheme = async (newTheme) => {
+        try {
+          await AsyncStorage.setItem('theme', JSON.stringify(newTheme));
+          setTheme(newTheme);
+        } catch (e) {
+          console.error(e);
+        }
+    };
+
     return (
-        <ThemeContext.Provider value={{ isLargeText, setIsLargeText }}>
+        <ThemeContext.Provider value={{ theme, saveTheme }}>
             {children}
         </ThemeContext.Provider>
     );
