@@ -11,6 +11,8 @@ export function ThemeProvider({ children }) {
         textSize: 'medium',
         color: 'black',
         isLeft: false,
+        isHideBalance: false,
+        currency: 'AUD',
     });
 
     useEffect(() => {

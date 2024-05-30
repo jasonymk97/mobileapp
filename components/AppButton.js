@@ -2,10 +2,10 @@ import React from 'react';
 import { Text, TouchableOpacity, ActivityIndicator, StyleSheet } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
-const AppButton = ({ title, onPress, isLoading }) => {
+const AppButton = ({ title, onPress, isLoading, containerStyle}) => {
   return (
     <TouchableOpacity
-      style={styles.container}
+      style={[styles.container, containerStyle]}
       onPress={!isLoading ? onPress : null}
       activeOpacity={0.8}
     >

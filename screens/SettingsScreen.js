@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Switch } from 'react-native';
 import { useTheme } from "../context/theme";
 import Slider from '@react-native-community/slider';
@@ -8,22 +8,38 @@ import RNPickerSelect from 'react-native-picker-select';
 import { Avatar } from 'react-native-elements';
 import AppButton from '../components/AppButton';
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function SettingsScreen() {
   const { theme, saveTheme } = useTheme();
   const [textSize, setTextSize] = useState(theme.textSize);
   const [color, setColor] = useState(theme.color || 'purple');
   const [isLeft, setIsLeft] = useState(theme.isLeft);
-  // TODO: please fix it after login
-  const username = 'Jason';
-  const initial = username.charAt(0).toUpperCase();
+  const [currency, setCurrency] = useState(theme.currency || 'AUD');
   const navigation = useNavigation();
+  const [email, setEmail] = useState('');
+  
+
+  useEffect(() => {
+    getEmail();
+  }, []);
 
   const colorsItems = [
     { label: 'Purple', value: 'purple' },
     { label: 'Blue', value: 'blue' },
     { label: 'Red ', value: 'red' },
   ];
+
+  const currencies = [
+    { label: 'AUD', value: 'AUD' },
+    { label: 'USD', value: 'USD' },
+    { label: 'HKD', value: 'HKD' },
+  ];
+
+  const getEmail = async () => {
+    const emailFromStorage = await AsyncStorage.getItem('email');
+    setEmail(emailFromStorage);
+  }
 
   const handleTextSizeChange = (value) => {
     const newSize = value === 0 ? 'small' : value === 1 ? 'medium' : 'large';
@@ -43,9 +59,16 @@ export default function SettingsScreen() {
     setIsLeft(isLeft)
   };
 
+  const handleCurrencyChange = (currency) => {
+    saveTheme({ ...theme, currency });
+    setCurrency(currency);
+  }
+
   const handleLogout = async () => {
-    // TODO: place your logout logic here
-    navigation.navigate('Auth', { screen: 'Login' });
+    // remove token
+    await AsyncStorage.removeItem('token');
+    // navigate to login screen
+    navigation.replace('Auth', { screen: 'Login' });
   }
 
   const pickerSelectStyles = StyleSheet.create({
@@ -64,11 +87,11 @@ export default function SettingsScreen() {
         <Avatar
           size="large"
           rounded
-          title={initial}
-          containerStyle={[styles.avatarContainer, {backgroundColor: CommonStyles.colorStyles[color]}]}
+          title={email ? email.charAt(0).toUpperCase() : ''}
+          containerStyle={[styles.avatarContainer, { backgroundColor: CommonStyles.colorStyles[color] }]}
           titleStyle={styles.avatarTitle}
         />
-        <Text style={styles.username}>{username}</Text>
+        <Text style={styles.username}>{email}</Text>
       </View>
       <View style={styles.container}>
         {/* Text Size */}
@@ -104,15 +127,28 @@ export default function SettingsScreen() {
           <View style={styles.settingBlock}>
             <Text style={[styles.text, CommonStyles.textSizeStyles[theme.textSize]]}>Alignment (Left)</Text>
             <Switch
-             trackColor={{true: CommonStyles.colorStyles[color]}}
+              trackColor={{ true: CommonStyles.colorStyles[color] }}
               onValueChange={handleAlignmentChange}
               value={isLeft}
               st
             />
           </View>
         </View>
+        {/* Currency */}
+        <View style={styles.settingContainer}>
+          <View style={styles.settingBlock}>
+            <Text style={[styles.text, CommonStyles.textSizeStyles[theme.textSize]]}>Currency</Text>
+            <RNPickerSelect
+              style={styles.currencyPickerSelectStyles}
+              value={currency}
+              items={currencies}
+              onValueChange={handleCurrencyChange}
+            >
+            </RNPickerSelect>
+          </View>
+        </View>
         {/* Logout */}
-        <AppButton onPress={handleLogout} title="Log Out"/>
+        <AppButton onPress={handleLogout} title="Log Out" />
       </View>
     </Layout>
   );
@@ -157,6 +193,11 @@ const styles = StyleSheet.create({
     height: 60,
     justifyContent: 'center',
     marginBottom: 20,
+  },
+  currencyPickerSelectStyles: {
+    inputIOS: {
+      marginTop: 5,
+    }
   }
 });
 

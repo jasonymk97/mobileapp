@@ -2,9 +2,14 @@ import React, { useState } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons'; 
 import { LinearGradient } from 'expo-linear-gradient';
+import { useTheme } from "../../context/theme";
 
-const AnimatedCard = (props) => {
-  const {currency = "AU", transactions} = props;
+const BalanceCard = (props) => {
+  const {transactions} = props;
+  const { theme, saveTheme} = useTheme();
+  const [isHidden, setIsHidden] = useState(theme.isHidden || false);
+  const currency = theme.currency || 'AUD';
+
   const totalExpense = () => {
     let totalExpense = 0;
     transactions.forEach(transaction => {
@@ -31,17 +36,17 @@ const AnimatedCard = (props) => {
   let expense = totalExpense().toFixed(2);
   let balance = (income - expense).toFixed(2) || 0;
 
-  const [isHidden, setIsHidden] = useState(true);
 
   const toggleVisibility = () => {
     setIsHidden(!isHidden);
+    saveTheme({ ...theme, isHidden: !isHidden });
   };
 
   const renderValue = (value) => {
     if (isHidden) {
-      return value
-    } else {
       return '*****';
+    } else {
+      return value
     }
   };
 
@@ -56,7 +61,7 @@ const AnimatedCard = (props) => {
       >
         <View style={styles.topWidget}>
           <TouchableOpacity onPress={toggleVisibility}>
-            <Ionicons name={isHidden ? 'eye' : 'eye-off'} size={24} color="black" />
+            <Ionicons name={isHidden ? 'eye-off' : 'eye'} size={24} color="black" />
           </TouchableOpacity>
           <View style={{ alignItems: 'center' }}>
             <Text style={{ fontWeight: 'bold', fontSize: 30 }}>Balance</Text>
@@ -89,4 +94,4 @@ const styles = {
   }
 };
 
-export default AnimatedCard;
+export default BalanceCard;

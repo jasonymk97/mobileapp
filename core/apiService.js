@@ -14,9 +14,7 @@ const api = axios.create({
 api.interceptors.request.use(
   async (config) => {
     // Fetch the token from AsyncStorage
-    // const token = await AsyncStorage.getItem('token');
-    // TODO: Remove this hardcoded token
-    const token = "";
+    const token = await AsyncStorage.getItem('token');
     
     if (token) {
       // If the token exists, set the Authorization header
@@ -80,7 +78,7 @@ const publicRequest = async (method, url, data = null) => {
     // console.error('Error making request', error);
     return {
       isError: true,
-      errorMessage: error.message,
+      errorMessage: response?.message || error.message,
       data: [],
     }
   }

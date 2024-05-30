@@ -14,7 +14,6 @@ const Stack = createStackNavigator();
 SplashScreen.preventAutoHideAsync();
 
 export default function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(true); // State to track login status
   const [appIsReady, setAppIsReady] = useState(false);
 
   useEffect(() => {
@@ -46,23 +45,19 @@ export default function App() {
     <NavigationContainer onReady={onReadyApp}>
       <ThemeProvider>
         <Stack.Navigator>
-            <>
-              <Stack.Screen
-                name="Main"
-                component={MainTabStack}
-                options={{ headerShown: false }} />
-              <Stack.Screen
-                name="TransactionInfoScreen"
-                component={TransactionInfoScreen}
-                options={{ title: 'Transaction Info' }} />
-            </>
-            <>
-              <Stack.Screen
-                name="Auth"
-                component={AuthStack}
-                options={{ headerShown: false }}
-              />
-            </>
+          <Stack.Screen
+            name="Auth"
+            component={AuthStack}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Main"
+            component={MainTabStack}
+            options={{ headerShown: false }} />
+          <Stack.Screen
+            name="TransactionInfoScreen"
+            component={TransactionInfoScreen}
+            options={{ title: 'Transaction Info' }} />
         </Stack.Navigator>
       </ThemeProvider>
       {/* Global Toast */}
