@@ -9,7 +9,7 @@ import { Avatar } from 'react-native-elements';
 import AppButton from '../components/AppButton';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import { currencySelectItems, colorSelectItems} from '../constants/globalConstants';
 export default function SettingsScreen() {
   const { theme, saveTheme } = useTheme();
   const [textSize, setTextSize] = useState(theme.textSize);
@@ -19,22 +19,9 @@ export default function SettingsScreen() {
   const navigation = useNavigation();
   const [email, setEmail] = useState('');
   
-
   useEffect(() => {
     getEmail();
   }, []);
-
-  const colorsItems = [
-    { label: 'Purple', value: 'purple' },
-    { label: 'Blue', value: 'blue' },
-    { label: 'Red ', value: 'red' },
-  ];
-
-  const currencies = [
-    { label: 'AUD', value: 'AUD' },
-    { label: 'USD', value: 'USD' },
-    { label: 'HKD', value: 'HKD' },
-  ];
 
   const getEmail = async () => {
     const emailFromStorage = await AsyncStorage.getItem('email');
@@ -116,7 +103,7 @@ export default function SettingsScreen() {
             <RNPickerSelect
               style={pickerSelectStyles}
               value={color}
-              items={colorsItems}
+              items={colorSelectItems}
               onValueChange={handleColorChange}
             >
             </RNPickerSelect>
@@ -141,7 +128,7 @@ export default function SettingsScreen() {
             <RNPickerSelect
               style={styles.currencyPickerSelectStyles}
               value={currency}
-              items={currencies}
+              items={currencySelectItems}
               onValueChange={handleCurrencyChange}
             >
             </RNPickerSelect>

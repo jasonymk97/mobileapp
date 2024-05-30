@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons'; 
 import { useNavigation } from '@react-navigation/native';
-import { categoryNames, categoryMaterialIcons } from '../constants/globalConstants';
+import { categoryNames, categoryMaterialIcons } from '../../constants/globalConstants';
 
 const TransactionItem = ({ transaction }) => {
   const {category_id, amount, type, date, id} = transaction;

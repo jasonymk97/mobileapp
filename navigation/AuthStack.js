@@ -11,15 +11,15 @@ export default function AuthStack() {
     const { theme } = useTheme();
     return (
         <Stack.Navigator
-        screenOptions={{
-            headerStyle: {
-                backgroundColor: CommonStyles.colorStyles[theme.color],
-            },
-            headerTitleStyle: {
-                fontWeight: 'bold',
-                fontSize: CommonStyles.textSizeStyles[theme.textSize].fontSize,
-            },
-        }}
+            screenOptions={{
+                headerStyle: {
+                    backgroundColor: CommonStyles.colorStyles[theme.color],
+                },
+                headerTitleStyle: {
+                    fontWeight: 'bold',
+                    fontSize: CommonStyles.textSizeStyles[theme.textSize].fontSize,
+                },
+            }}
         >
             <Stack.Screen name="Login" component={LoginScreen} />
             <Stack.Screen name="Register" component={RegisterScreen} />

@@ -18,8 +18,8 @@ const LicenseList = () => {
 
     return (
         <>
-            <View style={{flexDirection: 'row', marginVertical: 20 }}>
-                <MaterialCommunityIcons name="license" size={24} color="purple" style={{marginRight: 5}}/>
+            <View style={{ flexDirection: 'row', marginVertical: 20 }}>
+                <MaterialCommunityIcons name="license" size={24} color="purple" style={{ marginRight: 5 }} />
                 <Text style={{ fontSize: 20, fontWeight: '700', color: '#db5a74' }}>Licenses</Text>
             </View>
             <View style={styles.container}>

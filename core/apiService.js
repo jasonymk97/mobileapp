@@ -1,4 +1,3 @@
-// apiService.js
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -52,7 +51,6 @@ const request = async (method, url, data = null) => {
       data: responseData.data, // Return the data
     }
   } catch (error) {
-    // console.error('Error making request', error);
     return {
       isError: true,
       errorMessage: error.message,
@@ -75,7 +73,6 @@ const publicRequest = async (method, url, data = null) => {
       data: response.data, 
     }
   } catch (error) {
-    // console.error('Error making request', error);
     return {
       isError: true,
       errorMessage: response?.message || error.message,
@@ -83,5 +80,5 @@ const publicRequest = async (method, url, data = null) => {
     }
   }
 };
-// Export the request function
+
 export { request, publicRequest};

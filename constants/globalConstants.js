@@ -41,3 +41,15 @@ export const transactionTypeSelectItems = [
     { label: 'Expense', value: 'expense' },
     { label: 'Income', value: 'income' },
 ]
+
+export const colorSelectItems = [
+    { label: 'Purple', value: 'purple' },
+    { label: 'Blue', value: 'blue' },
+    { label: 'Red ', value: 'red' },
+  ];
+
+export const currencySelectItems = [
+    { label: 'AUD', value: 'AUD' },
+    { label: 'USD', value: 'USD' },
+    { label: 'HKD', value: 'HKD' },
+  ];

@@ -10,6 +10,7 @@ import { categoryNames, transactionTypeSelectItems } from '../constants/globalCo
 import CustomLineChart from '../components/analytics/CustomLineChart';
 import { summarizePieChartData, summarizeTransactionsData } from '../utils/chartDataUtils';
 import RNPickerSelect from 'react-native-picker-select';
+import useAlert from '../hooks/useAlert';
 
 export default function AnalyticsScreen() {
     const [isStartPickerVisible, setStartPickerVisibility] = useState(false);
@@ -21,6 +22,7 @@ export default function AnalyticsScreen() {
     const [transactionChartData, setTransactionChartData] = useState([]);
     const [pieChartData, setPieChartData] = useState([]);
     const [type, setType] = useState('expense'); // Default type is expense
+    const { show } = useAlert();
 
     const handleRefreshChart = useCallback(() => {
         setRefreshFlag(prevFlag => !prevFlag); // Toggle the refresh flag
@@ -96,9 +98,9 @@ export default function AnalyticsScreen() {
     const fetchTransactions = async () => {
         try {
             const response = await transactionService.getTransactions();
-            console.log('api call');
+
             if (response.isError) {
-                console.log('Error fetching Transactions:', response.errorMessage);
+                show('Error', response.errorMessage, 'error');
                 return;
             }
             setTransactions(response.data);
@@ -110,7 +112,6 @@ export default function AnalyticsScreen() {
 
     useEffect(() => {
         if (startDate && endDate && transactions.length > 0) {
-            console.log('Filtering transactions');
 
             // Convert startDate and endDate to timestamps
             const startTimestamp = startDate.getTime();
@@ -120,14 +121,12 @@ export default function AnalyticsScreen() {
                 return transaction.date >= startTimestamp && transaction.date <= endTimestamp && transaction.type === type;
             });
 
-            console.log('Filtered transactions:', filteredTransactions);
-
             const summarizedData = summarizeTransactionsData(filteredTransactions, startDate, endDate);
-            console.log("🚀 ~ useEffect ~ summarizedData:", summarizedData)
             const generatedPieData = summarizePieChartData(filteredTransactions, categoryNames);
 
             setTransactionChartData(summarizedData);
             setPieChartData(generatedPieData);
+
             // Force to refresh the chart
             handleRefreshChart();
         }
@@ -181,9 +180,13 @@ export default function AnalyticsScreen() {
                 <Button title="Last Year" onPress={setLastYear} />
             </View>
             <ScrollView>
+            {transactionChartData.length !== 0 && (
+                <>
                 <CustomBarChart key={refreshFlag.toString()} data={transactionChartData} />
                 <CustomLineChart data={transactionChartData} />
                 <CustomPieChart data={pieChartData} />
+                </>
+            )}
             </ScrollView>
         </Layout>
     );

@@ -53,7 +53,6 @@ const BalanceCard = (props) => {
   return (
     <>
       <LinearGradient
-        // colors={['#5B89FF', '#6640FF', '#8433A0']}
         colors={['rgba(91, 137, 255, 0.7)', 'rgba(102, 64, 255, 0.7)', 'rgba(132, 51, 160, 0.7)']}
         style={styles.gradient}
         start={[0, 0]}

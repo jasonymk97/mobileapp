@@ -3,14 +3,13 @@ import { useFocusEffect } from '@react-navigation/native';
 import { View, FlatList, StyleSheet, Text } from 'react-native';
 import { FAB } from 'react-native-paper';
 import Layout from '../components/Layout';
-import TransactionItem from '../components/TransactionItem';
+import TransactionItem from '../components/home/TransactionItem';
 import transactionService from '../services/transactionService';
 import BottomPopupModal from '../components/BottomPopupModal';
-import TransactionForm from '../components/TransactionForm';
+import TransactionForm from '../components/home/TransactionForm';
 import BalanceCard from '../components/home/BalanceCard';
 import { useTheme } from "../context/theme";
 import useAlert from '../hooks/useAlert';
-import { set } from 'react-hook-form';
 
 export default function HomeScreen() {
   const { theme } = useTheme();
@@ -69,7 +68,7 @@ export default function HomeScreen() {
         <View style={{ opacity: modalVisible ? 0.5 : undefined }}>
           <BalanceCard transactions={transactions} />
 
-          {/* Transactions */}
+        {/* Transactions */}
         </View>
         <Text style={styles.header}>Transactions</Text>
 
@@ -83,7 +82,7 @@ export default function HomeScreen() {
               renderItem={({ item }) => <TransactionItem transaction={item} />}
               keyExtractor={(item) => item.id.toString()} />)
         }
-        
+
         {/* NOTE: FAB must behind the FlatList, as the FlatList will block the FAB */}
         {/* Floating Action Button  */}
         <FAB
