@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
-import { View, FlatList, StyleSheet, Text} from 'react-native';
+import { View, FlatList, StyleSheet, Text } from 'react-native';
 import { FAB } from 'react-native-paper';
 import Layout from '../components/Layout';
 import TransactionItem from '../components/TransactionItem';
@@ -9,13 +9,16 @@ import BottomPopupModal from '../components/BottomPopupModal';
 import TransactionForm from '../components/TransactionForm';
 import BalanceCard from '../components/home/BalanceCard';
 import { useTheme } from "../context/theme";
+import useAlert from '../hooks/useAlert';
+import { set } from 'react-hook-form';
 
 export default function HomeScreen() {
   const { theme } = useTheme();
+  const { show } = useAlert();
   const [transactions, setTransactions] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [refreshTransactions, setRefreshTransactions] = useState(false);
-  
+
   const handleClose = () => {
     setModalVisible(false);
   };
@@ -39,9 +42,10 @@ export default function HomeScreen() {
   const fetchTransactions = async () => {
     try {
       const response = await transactionService.getTransactions();
-      console.log('api call');
       if (response.isError) {
         console.log('Error fetching expenses:', response.errorMessage);
+        show('Error', response.errorMessage, 'error');
+        setTransactions([]);
         return;
       }
       setTransactions(response.data);
@@ -61,25 +65,38 @@ export default function HomeScreen() {
   return (
     <>
       <Layout>
-        <View style={{opacity: modalVisible? 0.5 : undefined}}>
-        <BalanceCard transactions={transactions}/>
+        {/* Balance Card */}
+        <View style={{ opacity: modalVisible ? 0.5 : undefined }}>
+          <BalanceCard transactions={transactions} />
+
+          {/* Transactions */}
         </View>
         <Text style={styles.header}>Transactions</Text>
-        <FlatList
-          data={transactions}
-          renderItem={({ item }) => <TransactionItem transaction={item} />}
-          keyExtractor={(item) => item.id.toString()} />
+
+        {transactions.length === 0 ?
+          (<View style={styles.errorContainer}>
+            <Text style={styles.errorText}>Sorry ! No transactions are provided</Text>
+          </View>
+          ) : (
+            <FlatList
+              data={transactions}
+              renderItem={({ item }) => <TransactionItem transaction={item} />}
+              keyExtractor={(item) => item.id.toString()} />)
+        }
+        
         {/* NOTE: FAB must behind the FlatList, as the FlatList will block the FAB */}
+        {/* Floating Action Button  */}
         <FAB
           icon="plus"
-          style={[styles.fab, theme.isLeft ? {left: 0} : {right: 0}]}
+          style={[styles.fab, theme.isLeft ? { left: 0 } : { right: 0 }]}
           onPress={() => setModalVisible(true)}
         />
+        {/* Bottom Pop Modal */}
         <BottomPopupModal
           visible={modalVisible}
           onClose={handleClose}
           onConfirm={handleConfirm} >
-          <TransactionForm setModalVisible={setModalVisible} setRefreshTransactions={setRefreshTransactions}/>
+          <TransactionForm setModalVisible={setModalVisible} setRefreshTransactions={setRefreshTransactions} />
         </BottomPopupModal>
       </Layout>
     </>
@@ -108,4 +125,16 @@ const styles = StyleSheet.create({
     margin: 16,
     bottom: 0,
   },
+  errorContainer: {
+    backgroundColor: '#FFFFFF',
+    padding: 20,
+    flex: 1,
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  errorText: {
+    fontSize: 18,
+    color: 'red',
+  }
 });
