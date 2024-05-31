@@ -22,9 +22,9 @@ If you would like to contribute to the development of this application, please f
   - 🗺️ **Analytics Screen**: Show locations using a map
   - 🛠️ **Settings Screen**: Configure application settings
 - Auth
-  - 🚫 **Login Screen**: Handle wrong navigation links
-  - 🚫 **Register Screen**: Handle wrong navigation links
-- TransactionInfo Screen
+  - 👤 **Login Screen**: Handle wrong navigation links
+  - 👤 **Register Screen**: Handle wrong navigation links
+- 📊 TransactionInfo Screen 
 
 ## 🏗️ Architecture
 
