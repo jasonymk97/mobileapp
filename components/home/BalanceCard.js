@@ -7,7 +7,7 @@ import { useTheme } from "../../context/theme";
 const BalanceCard = (props) => {
   const {transactions} = props;
   const { theme, saveTheme} = useTheme();
-  const [isHidden, setIsHidden] = useState(theme.isHidden || false);
+  const [isHidden, setHidden] = useState(theme.isHideBalance || false);
   const currency = theme.currency || 'AUD';
 
   const totalExpense = () => {
@@ -38,12 +38,13 @@ const BalanceCard = (props) => {
 
 
   const toggleVisibility = () => {
-    setIsHidden(!isHidden);
-    saveTheme({ ...theme, isHidden: !isHidden });
+    const _isHidden = !isHidden;
+    saveTheme({ ...theme, isHideBalance: _isHidden });
+    setHidden(_isHidden);
   };
 
   const renderValue = (value) => {
-    if (isHidden) {
+    if (theme.isHideBalance) {
       return '*****';
     } else {
       return value
@@ -60,7 +61,7 @@ const BalanceCard = (props) => {
       >
         <View style={styles.topWidget}>
           <TouchableOpacity onPress={toggleVisibility}>
-            <Ionicons name={isHidden ? 'eye-off' : 'eye'} size={24} color="black" />
+            <Ionicons name={theme.isHideBalance ? 'eye-off' : 'eye'} size={24} color="black" />
           </TouchableOpacity>
           <View style={{ alignItems: 'center' }}>
             <Text style={{ fontWeight: 'bold', fontSize: 30 }}>Balance</Text>
