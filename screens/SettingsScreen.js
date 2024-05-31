@@ -29,8 +29,7 @@ export default function SettingsScreen() {
   }
 
   const handleTextSizeChange = (value) => {
-    const newSize = value === 0 ? 'small' : value === 1 ? 'medium' : 'large';
-    saveTheme({ ...theme, textSize: newSize });
+    saveTheme({ ...theme, textSize: value });
     setTextSize(value);
   };
 
@@ -68,6 +67,7 @@ export default function SettingsScreen() {
     }
   });
 
+
   return (
     <Layout>
       <View style={styles.userContainer}>
@@ -90,7 +90,7 @@ export default function SettingsScreen() {
               minimumValue={0}
               maximumValue={2}
               step={1}
-              value={textSize}
+              value={theme.textSize}
               minimumTrackTintColor={CommonStyles.colorStyles[color]}
               onValueChange={handleTextSizeChange}
             />

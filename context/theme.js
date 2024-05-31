@@ -8,7 +8,7 @@ export const useTheme = () => useContext(ThemeContext);
 
 export function ThemeProvider({ children }) {
     const [theme, setTheme] = useState({
-        textSize: 'medium',
+        textSize: 1,
         color: 'black',
         isLeft: false,
         isHideBalance: false,

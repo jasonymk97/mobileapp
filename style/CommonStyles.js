@@ -1,9 +1,9 @@
 export default CommonStyles = {
     // Text Size
     textSizeStyles: {
-        small: { fontSize: 16},
-        medium: { fontSize: 18 },
-        large: { fontSize: 20 },
+        0: { fontSize: 16}, // small
+        1: { fontSize: 18 }, // medium
+        2: { fontSize: 20 }, // large
     },
     colorStyles: {
         purple: '#CCB7F0',
